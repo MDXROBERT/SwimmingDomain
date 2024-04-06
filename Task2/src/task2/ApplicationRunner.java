@@ -162,8 +162,8 @@ public class ApplicationRunner {
         }
 
         System.out.print("Enter the number of the instructor: ");
-        scanner.nextLine(); 
-        int instructorNumber = Integer.parseInt(scanner.nextLine()); 
+        scanner.nextLine(); // To consume any leftover newline character
+        int instructorNumber = Integer.parseInt(scanner.nextLine()); // Parse the next full line as an integer
         if (instructorNumber < 1 || instructorNumber > sortedInstructors.size()) {
             System.out.println("Invalid instructor number.");
             return;
@@ -181,7 +181,7 @@ public class ApplicationRunner {
                     System.out.println("None");
                 } else {
                     lesson.getAttendees().forEach(student -> System.out.print(student.getName() + " (" + student.getLevel() + "), "));
-                    System.out.println(); 
+                    System.out.println(); // Ensures the line break after listing students
                 }
                 hasClasses = true;
             }
@@ -193,14 +193,14 @@ public class ApplicationRunner {
     }
 
     private static void addNewSwimStudent(Scanner scanner) {
-        System.out.println("\nEnter the level of the new swim student (Novice/Improver/Advanced): ");
-        scanner.nextLine(); 
-        String level = scanner.nextLine().trim(); 
+        String level = "Novice"; // Directly setting the student's level to Novice
+    System.out.println("\nAdding a new swim student at Novice level.");
+        String level1 = scanner.nextLine().trim(); 
         System.out.println("Would you like to add the student directly to the waiting list? (yes/no): ");
         String directToWaitingList = scanner.nextLine().trim();
         if ("yes".equalsIgnoreCase(directToWaitingList)) {
-            addStudentToWaitingList(scanner, level); 
-            return; 
+            addStudentToWaitingList(scanner, level1 ); // Directly add the student to the waiting list.
+            return; // Exit after adding to the waiting list.
         }
 
         // Display available classes for the chosen level
@@ -217,18 +217,18 @@ public class ApplicationRunner {
 
         if (availableLessons.isEmpty()) {
             System.out.println("No available classes for this level.");
-           
+            // Here, you could directly offer to add to the waiting list or exit.
             return; // Exit the method if no classes are available
         }
 
         // Let the user select a class
         System.out.print("Select a class by number: ");
         int classSelection = scanner.nextInt();
-        scanner.nextLine(); 
+        scanner.nextLine(); // To consume the newline after the number input.
 
         if (classSelection < 1 || classSelection > availableLessons.size()) {
             System.out.println("Invalid class selection.");
-            return; 
+            return; // Exit the method if an invalid selection is made
         }
 
         // Get the selected class
@@ -247,19 +247,24 @@ public class ApplicationRunner {
         }
 
         // Proceed to add the new student to the class since it's not full
-        System.out.print("Enter the name of the new swim student: ");
-        String name = scanner.nextLine();
+         System.out.print("Enter the name of the new swim student (letters only): ");
+    String name = scanner.nextLine().trim(); // Trim to ensure clean input
+    // Validate the name to contain only letters. Include spaces to allow for full names.
+    while (!name.matches("[a-zA-Z ]+")) {
+        System.out.println("Invalid name. Names must only contain letters. Please try again: ");
+        name = scanner.nextLine().trim();
+    }
 
         SwimStudent newStudent = new SwimStudent(name, level);
         selectedLesson.addAttendee(newStudent);
         newStudent.addLesson(selectedLesson);
         System.out.println(name + " has been added to the " + level + " lesson on " + selectedLesson.getDay() + " at " + selectedLesson.getStartTime());
 
-        
+        // Also, add the student to the global list of students
         students.add(newStudent);
     }
 
-
+// Example method for adding a student to the waiting list
     private static void addStudentToWaitingList(Scanner scanner, String level) {
         System.out.print("Enter the name of the new swim student for the waiting list: ");
         String name = scanner.nextLine();
@@ -299,19 +304,19 @@ public class ApplicationRunner {
 
     private static SwimStudent selectSwimStudent(Scanner scanner) {
         System.out.println("\nSelect a swim student from the list:");
-        students.sort(Comparator.comparing(SwimStudent::getName)); 
+        students.sort(Comparator.comparing(SwimStudent::getName)); // Sorts students by name
         for (int i = 0; i < students.size(); i++) {
             // Display each student's name along with their level
             SwimStudent student = students.get(i);
             System.out.println((i + 1) + ". " + student.getName() + " - Level: " + student.getLevel());
         }
         System.out.print("Enter the number of the student: ");
-        int choice = Integer.parseInt(scanner.nextLine()) - 1; /
+        int choice = Integer.parseInt(scanner.nextLine()) - 1; // Adjusting for 0-based indexing
         if (choice >= 0 && choice < students.size()) {
             return students.get(choice);
         } else {
             System.out.println("Invalid selection, please try again.");
-            return selectSwimStudent(scanner); 
+            return selectSwimStudent(scanner); // Recursively call the method until a valid choice is made
         }
     }
 
@@ -323,7 +328,8 @@ public class ApplicationRunner {
             System.out.println("1. Distance Swim\n2. Personal Survival");
             System.out.print("Select the type of qualification to award: ");
             int type = scanner.nextInt();
-            scanner.nextLine();  
+            scanner.nextLine();  // Consume the remaining newline.
+
             if (type == 1) {
                 System.out.print("Enter distance (e.g., 100): ");
                 int distance = scanner.nextInt();
@@ -345,7 +351,7 @@ public class ApplicationRunner {
                 }
             }
         } else {
-            
+            // If not advanced, directly award a Distance Swim qualification with predefined options.
             System.out.print("Enter distance (e.g., 100): ");
             int distance = scanner.nextInt();
             scanner.nextLine();  // Consume newline.
@@ -390,7 +396,7 @@ public class ApplicationRunner {
             List<SwimStudent> waitingStudents = waitingList.getStudents();
             if (waitingStudents.isEmpty()) {
                 System.out.println("No students currently on the waiting list.");
-                return null; 
+                return null; // Or handle this case as appropriate.
             }
             for (int i = 0; i < waitingStudents.size(); i++) {
                 System.out.println((i + 1) + ". " + waitingStudents.get(i).getName() + " - Level: " + waitingStudents.get(i).getLevel());
@@ -463,7 +469,7 @@ public class ApplicationRunner {
         waitingList.removeStudent(student);
         newClass.addAttendee(student);
 
-        // Assuming student has a method to update their lesson list
+        
         student.addLesson(newClass);
 
         System.out.println(student.getName() + " has been moved to the " + newClass.getLevel() + " class on " + newClass.getDay() + " at " + newClass.getStartTime() + ".");
@@ -484,13 +490,13 @@ public class ApplicationRunner {
         String[] days = {"Monday", "Wednesday", "Friday"};
         String[] levels = {"Novice", "Improver", "Advanced"};
 
-        // Use a round-robin approach to assign instructors to each class
+        // Algotithm to assign instructors to each class 
         int instructorIndex = 0;
         for (String day : days) {
             for (String time : times) {
                 for (String level : levels) {
                     SwimLesson lesson = new SwimLesson(day, time, level);
-                    // Assign instructors in a round-robin fashion
+                    
                     Instructor assignedInstructor = instructors.get(instructorIndex % instructors.size());
                     lesson.setTakenBy(assignedInstructor);
                     lessons.add(lesson);
@@ -507,7 +513,7 @@ public class ApplicationRunner {
             for (SwimLesson lesson : lessons) {
                 if (lesson.getLevel().equals(student.getLevel()) && lesson.getAttendees().size() < MAX_STUDENTS_PER_LESSON) {
                     lesson.addAttendee(student);
-                    break; // Stop looking once the student is placed
+                    break; 
                 }
             }
             students.add(student);
