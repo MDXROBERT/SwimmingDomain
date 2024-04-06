@@ -162,8 +162,8 @@ public class ApplicationRunner {
         }
 
         System.out.print("Enter the number of the instructor: ");
-        scanner.nextLine(); // To consume any leftover newline character
-        int instructorNumber = Integer.parseInt(scanner.nextLine()); // Parse the next full line as an integer
+        scanner.nextLine(); 
+        int instructorNumber = Integer.parseInt(scanner.nextLine()); 
         if (instructorNumber < 1 || instructorNumber > sortedInstructors.size()) {
             System.out.println("Invalid instructor number.");
             return;
@@ -181,7 +181,7 @@ public class ApplicationRunner {
                     System.out.println("None");
                 } else {
                     lesson.getAttendees().forEach(student -> System.out.print(student.getName() + " (" + student.getLevel() + "), "));
-                    System.out.println(); // Ensures the line break after listing students
+                    System.out.println(); 
                 }
                 hasClasses = true;
             }
@@ -194,13 +194,13 @@ public class ApplicationRunner {
 
     private static void addNewSwimStudent(Scanner scanner) {
         System.out.println("\nEnter the level of the new swim student (Novice/Improver/Advanced): ");
-        scanner.nextLine(); // To consume any leftover newline character.
-        String level = scanner.nextLine().trim(); // Trim to ensure clean input.
+        scanner.nextLine(); 
+        String level = scanner.nextLine().trim(); 
         System.out.println("Would you like to add the student directly to the waiting list? (yes/no): ");
         String directToWaitingList = scanner.nextLine().trim();
         if ("yes".equalsIgnoreCase(directToWaitingList)) {
-            addStudentToWaitingList(scanner, level); // Directly add the student to the waiting list.
-            return; // Exit after adding to the waiting list.
+            addStudentToWaitingList(scanner, level); 
+            return; 
         }
 
         // Display available classes for the chosen level
@@ -217,18 +217,18 @@ public class ApplicationRunner {
 
         if (availableLessons.isEmpty()) {
             System.out.println("No available classes for this level.");
-            // Here, you could directly offer to add to the waiting list or exit.
+           
             return; // Exit the method if no classes are available
         }
 
         // Let the user select a class
         System.out.print("Select a class by number: ");
         int classSelection = scanner.nextInt();
-        scanner.nextLine(); // To consume the newline after the number input.
+        scanner.nextLine(); 
 
         if (classSelection < 1 || classSelection > availableLessons.size()) {
             System.out.println("Invalid class selection.");
-            return; // Exit the method if an invalid selection is made
+            return; 
         }
 
         // Get the selected class
@@ -255,11 +255,11 @@ public class ApplicationRunner {
         newStudent.addLesson(selectedLesson);
         System.out.println(name + " has been added to the " + level + " lesson on " + selectedLesson.getDay() + " at " + selectedLesson.getStartTime());
 
-        // Also, add the student to the global list of students
+        
         students.add(newStudent);
     }
 
-// Example method for adding a student to the waiting list
+
     private static void addStudentToWaitingList(Scanner scanner, String level) {
         System.out.print("Enter the name of the new swim student for the waiting list: ");
         String name = scanner.nextLine();
@@ -299,19 +299,19 @@ public class ApplicationRunner {
 
     private static SwimStudent selectSwimStudent(Scanner scanner) {
         System.out.println("\nSelect a swim student from the list:");
-        students.sort(Comparator.comparing(SwimStudent::getName)); // Sorts students by name
+        students.sort(Comparator.comparing(SwimStudent::getName)); 
         for (int i = 0; i < students.size(); i++) {
             // Display each student's name along with their level
             SwimStudent student = students.get(i);
             System.out.println((i + 1) + ". " + student.getName() + " - Level: " + student.getLevel());
         }
         System.out.print("Enter the number of the student: ");
-        int choice = Integer.parseInt(scanner.nextLine()) - 1; // Adjusting for 0-based indexing
+        int choice = Integer.parseInt(scanner.nextLine()) - 1; /
         if (choice >= 0 && choice < students.size()) {
             return students.get(choice);
         } else {
             System.out.println("Invalid selection, please try again.");
-            return selectSwimStudent(scanner); // Recursively call the method until a valid choice is made
+            return selectSwimStudent(scanner); 
         }
     }
 
@@ -323,8 +323,7 @@ public class ApplicationRunner {
             System.out.println("1. Distance Swim\n2. Personal Survival");
             System.out.print("Select the type of qualification to award: ");
             int type = scanner.nextInt();
-            scanner.nextLine();  // Consume the remaining newline.
-
+            scanner.nextLine();  
             if (type == 1) {
                 System.out.print("Enter distance (e.g., 100): ");
                 int distance = scanner.nextInt();
@@ -346,7 +345,7 @@ public class ApplicationRunner {
                 }
             }
         } else {
-            // If not advanced, directly award a Distance Swim qualification with predefined options.
+            
             System.out.print("Enter distance (e.g., 100): ");
             int distance = scanner.nextInt();
             scanner.nextLine();  // Consume newline.
@@ -391,7 +390,7 @@ public class ApplicationRunner {
             List<SwimStudent> waitingStudents = waitingList.getStudents();
             if (waitingStudents.isEmpty()) {
                 System.out.println("No students currently on the waiting list.");
-                return null; // Or handle this case as appropriate.
+                return null; 
             }
             for (int i = 0; i < waitingStudents.size(); i++) {
                 System.out.println((i + 1) + ". " + waitingStudents.get(i).getName() + " - Level: " + waitingStudents.get(i).getLevel());
@@ -400,7 +399,7 @@ public class ApplicationRunner {
 
             String input = scanner.next(); // Directly use the input
             try {
-                int choice = Integer.parseInt(input.trim()) - 1; // Trim and parse
+                int choice = Integer.parseInt(input.trim()) - 1; 
                 if (choice >= 0 && choice < waitingStudents.size()) {
                     return waitingStudents.get(choice);
                 } else {
@@ -460,7 +459,7 @@ public class ApplicationRunner {
             return;
         }
 
-        // Assuming removeStudent and addAttendee methods perform necessary list updates
+        
         waitingList.removeStudent(student);
         newClass.addAttendee(student);
 
