@@ -9,7 +9,7 @@ package task2;
  * @author iarin
  */
 public abstract class Qualification {
-    // This could be a common field if needed, or common methods that subclasses should implement.
+    
     private String awardedBy; // The instructor who awarded the qualification
 
     // Constructor
