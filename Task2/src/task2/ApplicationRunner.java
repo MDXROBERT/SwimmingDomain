@@ -86,6 +86,7 @@ public class ApplicationRunner {
         }
         scanner.close();
     }
+//function for vewing information of a student 
 
     private static void viewSwimStudentInformation(Scanner scanner) {
         System.out.println("\nSelect a swim student from the list:");
@@ -142,52 +143,54 @@ public class ApplicationRunner {
         }
     }
 
+    //function to view the SwimLessonDetails
     private static void viewSwimLessonDetails(Scanner scanner) {
-    System.out.println("\nSelect a swim lesson from the list:");
-    for (int i = 0; i < lessons.size(); i++) {
-        SwimLesson lesson = lessons.get(i);
-        // Display the current number of attendees out of the max capacity
-        String attendeesInfo = String.format("%d/%d", lesson.getAttendees().size(), MAX_STUDENTS_PER_LESSON);
-        System.out.println((i + 1) + ". " + lesson.getDay() + " at " + lesson.getStartTime() + " (" + lesson.getLevel() + ") - " + attendeesInfo);
-    }
-    System.out.print("Enter the number of the lesson: ");
-
-    int lessonNumber = 0;
-    while (true) {
-        if (!scanner.hasNextInt()) {
-            System.out.println("Invalid input. Please enter a number.");
-            scanner.next(); // consume the invalid input
-            continue;
+        System.out.println("\nSelect a swim lesson from the list:");
+        for (int i = 0; i < lessons.size(); i++) {
+            SwimLesson lesson = lessons.get(i);
+            // Display the current number of attendees out of the max capacity
+            String attendeesInfo = String.format("%d/%d", lesson.getAttendees().size(), MAX_STUDENTS_PER_LESSON);
+            System.out.println((i + 1) + ". " + lesson.getDay() + " at " + lesson.getStartTime() + " (" + lesson.getLevel() + ") - " + attendeesInfo);
         }
-        lessonNumber = scanner.nextInt();
-        scanner.nextLine(); // consume the newline
-        if (lessonNumber < 1 || lessonNumber > lessons.size()) {
-            System.out.println("Invalid lesson number. Please try again: ");
+        System.out.print("Enter the number of the lesson: ");
+
+        int lessonNumber = 0;
+        while (true) {
+            if (!scanner.hasNextInt()) {
+                System.out.println("Invalid input. Please enter a number.");
+                scanner.next(); // consume the invalid input
+                continue;
+            }
+            lessonNumber = scanner.nextInt();
+            scanner.nextLine(); // consume the newline
+            if (lessonNumber < 1 || lessonNumber > lessons.size()) {
+                System.out.println("Invalid lesson number. Please try again: ");
+            } else {
+                break; // break the loop if input is valid
+            }
+        }
+
+        SwimLesson selectedLesson = lessons.get(lessonNumber - 1);
+        System.out.println("\nLesson Details:");
+        System.out.println("Day: " + selectedLesson.getDay());
+        System.out.println("Time: " + selectedLesson.getStartTime());
+        System.out.println("Level: " + selectedLesson.getLevel());
+        Instructor instructor = selectedLesson.getTakenBy();
+        System.out.println("Instructor: " + (instructor != null ? instructor.getName() : "No instructor assigned"));
+        // show the count in the detailed view
+        String attendeesInfoDetailed = String.format("%d/%d students enrolled", selectedLesson.getAttendees().size(), MAX_STUDENTS_PER_LESSON);
+        System.out.println(attendeesInfoDetailed);
+
+        if (selectedLesson.getAttendees().isEmpty()) {
+            System.out.println("No students are enrolled in this class.");
         } else {
-            break; // break the loop if input is valid
+            System.out.println("Enrolled students:");
+            for (SwimStudent student : selectedLesson.getAttendees()) {
+                System.out.println("- " + student.getName() + " (" + student.getLevel() + ")");
+            }
         }
     }
-
-    SwimLesson selectedLesson = lessons.get(lessonNumber - 1);
-    System.out.println("\nLesson Details:");
-    System.out.println("Day: " + selectedLesson.getDay());
-    System.out.println("Time: " + selectedLesson.getStartTime());
-    System.out.println("Level: " + selectedLesson.getLevel());
-    Instructor instructor = selectedLesson.getTakenBy();
-    System.out.println("Instructor: " + (instructor != null ? instructor.getName() : "No instructor assigned"));
-    // Here again, show the count in the detailed view
-    String attendeesInfoDetailed = String.format("%d/%d students enrolled", selectedLesson.getAttendees().size(), MAX_STUDENTS_PER_LESSON);
-    System.out.println(attendeesInfoDetailed);
-
-    if (selectedLesson.getAttendees().isEmpty()) {
-        System.out.println("No students are enrolled in this class.");
-    } else {
-        System.out.println("Enrolled students:");
-        for (SwimStudent student : selectedLesson.getAttendees()) {
-            System.out.println("- " + student.getName() + " (" + student.getLevel() + ")");
-        }
-    }
-}
+    //function to view Instructor Schedule 
 
     private static void viewInstructorSchedule(Scanner scanner) {
         System.out.println("\nSelect an instructor from the list:");
@@ -239,6 +242,7 @@ public class ApplicationRunner {
         }
     }
 
+    //function to add a New Swim Studnet 
     private static void addNewSwimStudent(Scanner scanner) {
         String level = "Novice"; // Directly setting the student's level to Novice
         System.out.println("\nAdding a new swim student at Novice level.");
@@ -274,7 +278,7 @@ public class ApplicationRunner {
             System.out.println("That's not a valid number. Please enter a number.");
             scanner.next();
         }
-        int classSelection = scanner.nextInt() - 1;
+        int classSelection = scanner.nextInt();
         scanner.nextLine();
 
         if (classSelection < 1 || classSelection > availableLessons.size()) {
@@ -315,6 +319,7 @@ public class ApplicationRunner {
         students.add(newStudent);
     }
 
+    //function to add a Student to a Waiting List
     private static void addStudentToWaitingList(Scanner scanner, String level) {
         String name = "";
         boolean isValidName = false;
@@ -337,6 +342,7 @@ public class ApplicationRunner {
         students.add(newStudent);
     }
 
+    //function to check if a student has a qualification
     private static boolean hasQualification(SwimStudent student, String qualificationType, String detail) {
         for (Qualification qualification : student.getQualifications()) {
             if (qualification instanceof DistanceSwim && "DistanceSwim".equals(qualificationType)) {
@@ -354,6 +360,7 @@ public class ApplicationRunner {
         return false;
     }
 
+    //function to select an Instructor from the list
     private static Instructor selectInstructor(Scanner scanner) {
         System.out.println("Select an instructor:");
         instructors.sort(Comparator.comparing(Instructor::getName));
@@ -363,10 +370,10 @@ public class ApplicationRunner {
 
         while (!scanner.hasNextInt()) {
             System.out.println("That's not a number. Please enter a number.");
-            scanner.next(); // Discard the invalid input
+            scanner.next();
         }
         int choice = scanner.nextInt() - 1;
-        scanner.nextLine(); // Consume the remaining newline character
+        scanner.nextLine();
 
         if (choice >= 0 && choice < instructors.size()) {
             return instructors.get(choice);
@@ -376,6 +383,7 @@ public class ApplicationRunner {
         }
     }
 
+    //function to select an Swim Student from the list
     private static SwimStudent selectSwimStudent(Scanner scanner) {
         System.out.println("\nSelect a swim student from the list:");
         students.sort(Comparator.comparing(SwimStudent::getName));
@@ -386,10 +394,10 @@ public class ApplicationRunner {
 
         while (!scanner.hasNextInt()) {
             System.out.println("That's not a number. Please enter a number.");
-            scanner.next(); // Discard the invalid input
+            scanner.next();
         }
         int choice = scanner.nextInt() - 1;
-        scanner.nextLine(); // Consume the remaining newline character
+        scanner.nextLine();
 
         if (choice >= 0 && choice < students.size()) {
             return students.get(choice);
@@ -398,7 +406,7 @@ public class ApplicationRunner {
             return selectSwimStudent(scanner);
         }
     }
-
+    //function to award an Swim Qualification to a student 
     private static void awardSwimQualification(Scanner scanner) {
         Instructor selectedInstructor = selectInstructor(scanner);
         SwimStudent selectedStudent = selectSwimStudent(scanner);
@@ -406,15 +414,20 @@ public class ApplicationRunner {
         if ("Advanced".equalsIgnoreCase(selectedStudent.getLevel())) {
             System.out.println("1. Distance Swim\n2. Personal Survival");
             System.out.print("Select the type of qualification to award: ");
+            while (!scanner.hasNextInt()) {
+                scanner.next(); // discard invalid input
+                System.out.println("Invalid input. Please enter a number for your choice.");
+                System.out.print("Select the type of qualification to award: ");
+            }
             int type = scanner.nextInt();
             scanner.nextLine();
 
             if (type == 1) {
                 System.out.print("Enter distance (e.g., 100): ");
-                while (!scanner.hasNextInt()) { 
+                while (!scanner.hasNextInt()) {
                     scanner.next(); 
                     System.out.println("Invalid input. Please enter a valid number for distance.");
-                    System.out.print("Enter distance (e.g., 100): ");
+                    System.out.print("Enter distance (e.g., 400 Meters): ");
                 }
                 int distance = scanner.nextInt();
                 scanner.nextLine();
@@ -425,17 +438,34 @@ public class ApplicationRunner {
                     System.out.println("Student already has this qualification.");
                 }
             } else if (type == 2) {
-                System.out.print("Enter level (e.g., Bronze, Silver, Gold): ");
-                String level = scanner.nextLine();
+                System.out.println("Select the level for Personal Survival:");
+                System.out.println("1. Bronze\n2. Silver\n3. Gold");
+                System.out.print("Your choice: ");
+                int levelChoice = 0;
+                while (true) {
+                    if (scanner.hasNextInt()) {
+                        levelChoice = scanner.nextInt();
+                        scanner.nextLine(); 
+                        if (levelChoice >= 1 && levelChoice <= 3) {
+                            break; 
+                        }
+                    } else {
+                        scanner.next(); 
+                    }
+                    System.out.println("Invalid selection. Please try again.");
+                    System.out.println("1. Bronze\n2. Silver\n3. Gold");
+                    System.out.print("Your choice: ");
+                }
+                String level = levelChoice == 1 ? "Bronze" : levelChoice == 2 ? "Silver" : "Gold";
                 if (!hasQualification(selectedStudent, "PersonalSurvival", level)) {
                     selectedStudent.addQualification(new PersonalSurvival(selectedInstructor.getName(), level));
-                    System.out.println("Awarded Personal Survival qualification.");
+                    System.out.println("Awarded Personal Survival qualification: " + level);
                 } else {
                     System.out.println("Student already has this qualification.");
                 }
             }
         } else {
-            System.out.print("Enter distance (e.g., 20, 400): ");
+            System.out.print("Enter distance (e.g., 20 Meters Swim for Novice and 400 Meters for Advanced to level up): ");
             while (!scanner.hasNextInt()) {
                 scanner.next(); // Consume the non-integer input
                 System.out.println("Invalid input. Please enter a number for distance.");
@@ -454,6 +484,7 @@ public class ApplicationRunner {
         }
     }
 
+    //function to update the level of an Swim Studnet and add to waiting list
     private static void updateLevelAndAddToWaitingList(SwimStudent student, int distance) {
         // Assume novice students can only receive a 20-meter qualification for level advancement
         if ("Novice".equals(student.getLevel()) && distance == 20) {
@@ -471,7 +502,7 @@ public class ApplicationRunner {
         }
 
     }
-
+    //function to Select a Student from the waiting list
     private static SwimStudent selectStudentFromWaitingList(Scanner scanner) {
         while (true) {
             System.out.println("Select a student from the waiting list:");
@@ -498,7 +529,7 @@ public class ApplicationRunner {
             }
         }
     }
-
+    //function to select a new class for the Studnet
     private static SwimLesson selectNewClassForStudent(Scanner scanner, SwimStudent student) {
         while (true) {
             System.out.println("Select a new class for " + student.getName() + " (Level: " + student.getLevel() + "):");
@@ -528,7 +559,7 @@ public class ApplicationRunner {
             }
         }
     }
-
+    //function to move the Swim Student from the waiting list
     private static void moveSwimFromWaitingList(Scanner scanner) {
         if (waitingList.getStudents().isEmpty()) {
             System.out.println("The waiting list is currently empty.");
@@ -554,7 +585,7 @@ public class ApplicationRunner {
 
         System.out.println(student.getName() + " has been moved to the " + newClass.getLevel() + " class on " + newClass.getDay() + " at " + newClass.getStartTime() + ".");
     }
-
+    //function to add the dummy date for the program testing 
     private static void preloadData() {
         // Adding instructors
         Instructor instructor1 = new Instructor("Jane Bober Smith");
