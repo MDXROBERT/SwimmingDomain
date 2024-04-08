@@ -546,19 +546,21 @@ public class ApplicationRunner {
             }
 
             System.out.print("Enter your choice: ");
-            String input = scanner.nextLine();
-            try {
-                int choice = Integer.parseInt(scanner.nextLine()) - 1;
-                if (choice >= 0 && choice < availableClasses.size()) {
-                    return availableClasses.get(choice);
-                } else {
-                    System.out.println("Invalid choice. Please enter a number from the list.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input. Please enter a number.");
+        
+        String input = scanner.nextLine();
+        try {
+            // Parse the input string to an integer once
+            int choice = Integer.parseInt(input.trim()) - 1; 
+            if (choice >= 0 && choice < availableClasses.size()) {
+                return availableClasses.get(choice);
+            } else {
+                System.out.println("Invalid choice. Please enter a number from the list.");
             }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input. Please enter a number.");
         }
     }
+}
     //function to move the Swim Student from the waiting list
     private static void moveSwimFromWaitingList(Scanner scanner) {
         if (waitingList.getStudents().isEmpty()) {
